@@ -1,12 +1,13 @@
 import csv
 import io
 import json
-import os
-import re
 import urllib.request
-import zipfile
 from datetime import datetime, timezone
 
+
+# =========================================================
+# BIS GLOBAL LIQUIDITY DATA
+# =========================================================
 
 API_URL = (
     "https://stats.bis.org/api/v2/data/dataflow/"
@@ -20,125 +21,159 @@ BULK_URL = (
 )
 
 
+# =========================================================
+# DOWNLOAD
+# =========================================================
+
 def download(url):
-    req = urllib.request.Request(
+
+    request = urllib.request.Request(
         url,
         headers={
-            "User-Agent": "BondStats/1.0"
+            "User-Agent":
+                "BondStats Global Liquidity Monitor/1.0",
+            "Accept":
+                "text/csv,application/octet-stream,*/*"
         }
     )
 
     with urllib.request.urlopen(
-        req,
-        timeout=60
+        request,
+        timeout=90
     ) as response:
+
         return response.read()
 
 
-def get_source_csv():
-
-    # First try the official BIS SDMX API
-    try:
-        print("Trying BIS SDMX API...")
-
-        raw = download(API_URL)
-
-        text = raw.decode(
-            "utf-8-sig",
-            errors="replace"
-        )
-
-        if "TIME_PERIOD" in text and "OBS_VALUE" in text:
-            print("BIS API successful.")
-            return text, "BIS SDMX API"
-
-    except Exception as e:
-        print(
-            "API request failed:",
-            str(e)
-        )
-
-    # Official BIS bulk fallback
-    print("Trying BIS bulk fallback...")
-
-    raw_zip = download(BULK_URL)
-
-    with zipfile.ZipFile(
-        io.BytesIO(raw_zip)
-    ) as z:
-
-        csv_files = [
-            name
-            for name in z.namelist()
-            if name.lower().endswith(".csv")
-        ]
-
-        if not csv_files:
-            raise RuntimeError(
-                "No CSV file found in BIS archive."
-            )
-
-        with z.open(csv_files[0]) as f:
-            text = f.read().decode(
-                "utf-8-sig",
-                errors="replace"
-            )
-
-    print("BIS bulk fallback successful.")
-
-    return text, "BIS Global Liquidity Bulk Data"
-
+# =========================================================
+# BASIC HELPERS
+# =========================================================
 
 def clean(value):
+
+    if value is None:
+        return ""
+
     return (
-        str(value or "")
+        str(value)
         .replace("\xa0", " ")
         .strip()
     )
 
 
-def numeric(value):
+def number(value):
 
     value = clean(value)
 
-    value = value.replace(",", "")
-
-    match = re.search(
-        r"-?\d+(?:\.\d+)?",
-        value
-    )
-
-    if not match:
+    if not value:
         return None
 
+    value = value.replace(",", "")
+
     try:
-        return float(match.group())
+        return float(value)
+
     except ValueError:
         return None
 
 
-def normalized_row_text(row):
+def find_column(
+    fieldnames,
+    wanted
+):
 
-    return " | ".join(
-        clean(v).lower()
-        for v in row.values()
-        if v is not None
-    )
-
-
-def get_column(fieldnames, target):
-
-    target = target.lower()
+    wanted = wanted.upper()
 
     for field in fieldnames:
 
-        if target in field.lower():
+        if clean(field).upper() == wanted:
+            return field
+
+    # Some CSV representations may prefix
+    # or slightly modify the SDMX heading.
+    for field in fieldnames:
+
+        if wanted in clean(field).upper():
             return field
 
     return None
 
 
-def rows_from_csv(text):
+def is_code(value, code):
+    """
+    Supports both raw SDMX codes:
+        USD
+
+    and labelled representations such as:
+        USD: US dollar
+        USD - US dollar
+        USD, US dollar
+    """
+
+    value = clean(value)
+    code = clean(code)
+
+    if value == code:
+        return True
+
+    upper_value = value.upper()
+    upper_code = code.upper()
+
+    return (
+        upper_value.startswith(
+            upper_code + ":"
+        )
+        or upper_value.startswith(
+            upper_code + " -"
+        )
+        or upper_value.startswith(
+            upper_code + ","
+        )
+        or upper_value.startswith(
+            upper_code + " "
+        )
+    )
+
+
+# =========================================================
+# LOAD BIS DATA
+# =========================================================
+
+def load_api_csv():
+
+    print(
+        "Downloading BIS Global Liquidity data..."
+    )
+
+    raw = download(API_URL)
+
+    text = raw.decode(
+        "utf-8-sig",
+        errors="replace"
+    )
+
+    if "TIME_PERIOD" not in text:
+        raise RuntimeError(
+            "BIS API response does not contain "
+            "TIME_PERIOD."
+        )
+
+    if "OBS_VALUE" not in text:
+        raise RuntimeError(
+            "BIS API response does not contain "
+            "OBS_VALUE."
+        )
+
+    print("BIS API successful.")
+
+    return text
+
+
+# =========================================================
+# PARSE SDMX CSV
+# =========================================================
+
+def parse_rows(text):
 
     reader = csv.DictReader(
         io.StringIO(text)
@@ -148,213 +183,342 @@ def rows_from_csv(text):
 
     if not rows:
         raise RuntimeError(
-            "BIS dataset returned no rows."
+            "BIS API returned no observations."
         )
 
-    return rows, reader.fieldnames
+    fields = reader.fieldnames or []
+
+    required = {
+        "freq":
+            find_column(
+                fields,
+                "FREQ"
+            ),
+
+        "currency":
+            find_column(
+                fields,
+                "CURR_DENOM"
+            ),
+
+        "borrower_country":
+            find_column(
+                fields,
+                "BORROWERS_CTY"
+            ),
+
+        "borrower_sector":
+            find_column(
+                fields,
+                "BORROWERS_SECTOR"
+            ),
+
+        "lender_sector":
+            find_column(
+                fields,
+                "LENDERS_SECTOR"
+            ),
+
+        "position":
+            find_column(
+                fields,
+                "L_POS_TYPE"
+            ),
+
+        "instrument":
+            find_column(
+                fields,
+                "L_INSTR"
+            ),
+
+        "unit":
+            find_column(
+                fields,
+                "UNIT_MEASURE"
+            ),
+
+        "time":
+            find_column(
+                fields,
+                "TIME_PERIOD"
+            ),
+
+        "value":
+            find_column(
+                fields,
+                "OBS_VALUE"
+            )
+    }
+
+    missing = [
+        key
+        for key, value
+        in required.items()
+        if value is None
+    ]
+
+    if missing:
+
+        print(
+            "Columns received from BIS:"
+        )
+
+        for field in fields:
+            print(" -", field)
+
+        raise RuntimeError(
+            "Missing BIS SDMX columns: "
+            + ", ".join(missing)
+        )
+
+    return rows, required
 
 
-def contains_any(text, values):
+# =========================================================
+# EXACT BIS SERIES SELECTION
+# =========================================================
 
-    return any(
-        value.lower() in text
-        for value in values
-    )
-
-
-def currency_candidates(
+def matching_rows(
     rows,
-    time_col,
-    value_col,
-    currency_terms,
-    outside_terms
+    columns,
+    currency,
+    unit
 ):
 
     result = []
 
     for row in rows:
 
-        text = normalized_row_text(row)
+        # Exact BIS GLI series structure:
+        #
+        # Q
+        # currency
+        # 3P = borrowers outside currency area
+        # N  = non-banks, total
+        # A  = all lending sectors
+        # I  = cross-border & local in FCY
+        # B  = credit (loans & debt securities)
+        # unit = currency or 771 (YoY growth)
 
-        if not contains_any(
-            text,
-            currency_terms
+        if not is_code(
+            row.get(
+                columns["freq"]
+            ),
+            "Q"
         ):
             continue
 
-        if not contains_any(
-            text,
-            outside_terms
+        if not is_code(
+            row.get(
+                columns["currency"]
+            ),
+            currency
         ):
             continue
 
-        value = numeric(
-            row.get(value_col)
-        )
+        if not is_code(
+            row.get(
+                columns[
+                    "borrower_country"
+                ]
+            ),
+            "3P"
+        ):
+            continue
+
+        if not is_code(
+            row.get(
+                columns[
+                    "borrower_sector"
+                ]
+            ),
+            "N"
+        ):
+            continue
+
+        if not is_code(
+            row.get(
+                columns[
+                    "lender_sector"
+                ]
+            ),
+            "A"
+        ):
+            continue
+
+        if not is_code(
+            row.get(
+                columns["position"]
+            ),
+            "I"
+        ):
+            continue
+
+        if not is_code(
+            row.get(
+                columns["instrument"]
+            ),
+            "B"
+        ):
+            continue
+
+        if not is_code(
+            row.get(
+                columns["unit"]
+            ),
+            unit
+        ):
+            continue
 
         period = clean(
-            row.get(time_col)
+            row.get(
+                columns["time"]
+            )
         )
 
-        if (
-            value is None
-            or not period
-        ):
+        value = number(
+            row.get(
+                columns["value"]
+            )
+        )
+
+        if not period:
+            continue
+
+        if value is None:
             continue
 
         result.append(
             {
-                "text": text,
-                "period": period,
-                "value": value
+                "period":
+                    period,
+
+                "value":
+                    value
             }
         )
+
+    result.sort(
+        key=lambda x:
+            x["period"]
+    )
 
     return result
 
 
-def latest_matching(
-    candidates,
-    include_terms,
-    exclude_terms=None
-):
-
-    exclude_terms = (
-        exclude_terms or []
-    )
-
-    filtered = []
-
-    for row in candidates:
-
-        text = row["text"]
-
-        if include_terms:
-
-            if not contains_any(
-                text,
-                include_terms
-            ):
-                continue
-
-        if exclude_terms:
-
-            if contains_any(
-                text,
-                exclude_terms
-            ):
-                continue
-
-        filtered.append(row)
-
-    if not filtered:
-        return None
-
-    filtered.sort(
-        key=lambda x: x["period"]
-    )
-
-    return filtered[-1]
-
+# =========================================================
+# GET ONE CURRENCY
+# =========================================================
 
 def extract_currency(
     rows,
-    time_col,
-    value_col,
-    currency_terms,
-    outside_terms,
-    currency_name
+    columns,
+    currency
 ):
 
-    candidates = currency_candidates(
+    amount_rows = matching_rows(
         rows,
-        time_col,
-        value_col,
-        currency_terms,
-        outside_terms
+        columns,
+        currency,
+        currency
     )
 
-    # Outstanding stock
-    amount = latest_matching(
-        candidates,
-        [
-            "amount outstanding",
-            "outstanding"
-        ],
-        [
-            "annual change",
-            "year-on-year",
-            "growth"
-        ]
+    growth_rows = matching_rows(
+        rows,
+        columns,
+        currency,
+        "771"
     )
 
-    # YoY growth
-    growth = latest_matching(
-        candidates,
-        [
-            "annual change",
-            "year-on-year",
-            "yoy",
-            "growth"
-        ]
-    )
-
-    # Fallback when labels differ slightly
-    if amount is None:
-
-        amount = latest_matching(
-            candidates,
-            [],
-            [
-                "annual change",
-                "year-on-year"
-            ]
-        )
-
-    if amount is None:
+    if not amount_rows:
 
         raise RuntimeError(
-            f"Could not identify {currency_name} "
-            "credit outstanding series."
+            f"No outstanding credit series "
+            f"found for {currency}. "
+            f"Expected BIS series structure "
+            f"Q.{currency}.3P.N.A.I.B.{currency}"
+        )
+
+    latest_amount = amount_rows[-1]
+
+    # Prefer growth observation from same period.
+    growth_by_period = {
+        item["period"]:
+            item["value"]
+        for item in growth_rows
+    }
+
+    growth = growth_by_period.get(
+        latest_amount["period"]
+    )
+
+    growth_period = (
+        latest_amount["period"]
+        if growth is not None
+        else None
+    )
+
+    # If same-quarter growth is unavailable,
+    # use latest valid growth observation.
+    if (
+        growth is None
+        and growth_rows
+    ):
+
+        latest_growth = (
+            growth_rows[-1]
+        )
+
+        growth = (
+            latest_growth["value"]
+        )
+
+        growth_period = (
+            latest_growth["period"]
         )
 
     return {
-        "amount": amount["value"],
-        "period": amount["period"],
-        "growth": (
-            growth["value"]
-            if growth
-            else None
-        ),
-        "growthPeriod": (
-            growth["period"]
-            if growth
-            else None
-        )
+        "amount":
+            latest_amount["value"],
+
+        "period":
+            latest_amount["period"],
+
+        "growth":
+            growth,
+
+        "growthPeriod":
+            growth_period
     }
 
 
-def classify_growth(
+# =========================================================
+# REGIME
+# =========================================================
+
+def classify_regime(
     usd,
     eur,
     jpy
 ):
 
-    values = [
+    growth_values = [
         item["growth"]
-        for item in [
+        for item in (
             usd,
             eur,
             jpy
-        ]
+        )
         if item["growth"]
         is not None
     ]
 
-    if len(values) < 2:
+    if len(growth_values) < 2:
 
         return {
-            "name": "MIXED SIGNAL",
+            "name":
+                "MIXED SIGNAL",
+
             "description":
                 "Available global liquidity "
                 "indicators do not yet provide "
@@ -363,24 +527,24 @@ def classify_growth(
         }
 
     positive = sum(
-        1
-        for x in values
-        if x > 0
+        value > 0
+        for value
+        in growth_values
     )
 
     negative = sum(
-        1
-        for x in values
-        if x < 0
+        value < 0
+        for value
+        in growth_values
     )
 
-    strong = sum(
-        1
-        for x in values
-        if x >= 5
+    strong_positive = sum(
+        value >= 5
+        for value
+        in growth_values
     )
 
-    if strong >= 2:
+    if strong_positive >= 2:
 
         return {
             "name":
@@ -394,7 +558,9 @@ def classify_growth(
                 "credit availability."
         }
 
-    if positive == len(values):
+    if positive == len(
+        growth_values
+    ):
 
         return {
             "name":
@@ -432,114 +598,127 @@ def classify_growth(
     }
 
 
+# =========================================================
+# MAIN
+# =========================================================
+
 def main():
 
-    csv_text, source = get_source_csv()
+    text = load_api_csv()
 
-    rows, fieldnames = rows_from_csv(
-        csv_text
+    rows, columns = parse_rows(
+        text
     )
 
-    time_col = get_column(
-        fieldnames,
-        "TIME_PERIOD"
+    print(
+        f"Received {len(rows):,} "
+        "BIS observations."
     )
 
-    value_col = get_column(
-        fieldnames,
-        "OBS_VALUE"
+
+    # -----------------------------------------------------
+    # USD
+    # -----------------------------------------------------
+
+    print(
+        "Reading US dollar liquidity..."
     )
-
-    if not time_col:
-        raise RuntimeError(
-            "TIME_PERIOD column not found."
-        )
-
-    if not value_col:
-        raise RuntimeError(
-            "OBS_VALUE column not found."
-        )
 
     usd = extract_currency(
         rows,
-        time_col,
-        value_col,
-        [
-            "us dollar",
-            "usd"
-        ],
-        [
-            "outside the united states",
-            "outside united states",
-            "non-us"
-        ],
-        "US dollar"
+        columns,
+        "USD"
+    )
+
+    print(
+        "USD:",
+        usd
+    )
+
+
+    # -----------------------------------------------------
+    # EUR
+    # -----------------------------------------------------
+
+    print(
+        "Reading euro liquidity..."
     )
 
     eur = extract_currency(
         rows,
-        time_col,
-        value_col,
-        [
-            "euro",
-            "eur"
-        ],
-        [
-            "outside the euro area",
-            "outside euro area",
-            "non-euro area"
-        ],
-        "euro"
+        columns,
+        "EUR"
+    )
+
+    print(
+        "EUR:",
+        eur
+    )
+
+
+    # -----------------------------------------------------
+    # JPY
+    # -----------------------------------------------------
+
+    print(
+        "Reading yen liquidity..."
     )
 
     jpy = extract_currency(
         rows,
-        time_col,
-        value_col,
-        [
-            "japanese yen",
-            "jp yen",
-            "jpy"
-        ],
-        [
-            "outside japan",
-            "non-japan"
-        ],
-        "yen"
+        columns,
+        "JPY"
     )
 
-    regime = classify_growth(
+    print(
+        "JPY:",
+        jpy
+    )
+
+
+    # -----------------------------------------------------
+    # REGIME
+    # -----------------------------------------------------
+
+    regime = classify_regime(
         usd,
         eur,
         jpy
     )
 
-    periods = [
+
+    # Conservative common data period:
+    # oldest latest observation among
+    # the three currencies.
+
+    common_period = min(
         usd["period"],
         eur["period"],
         jpy["period"]
-    ]
+    )
 
-    latest_period = sorted(
-        periods
-    )[-1]
 
     output = {
 
-        "ok": True,
+        "ok":
+            True,
 
         "title":
             "Global Liquidity Monitor",
 
-        "source": source,
+        "source":
+            "Bank for International Settlements",
+
+        "dataset":
+            "Global Liquidity Indicators",
+
+        "period":
+            common_period,
 
         "updatedAt":
             datetime.now(
                 timezone.utc
             ).isoformat(),
-
-        "period":
-            latest_period,
 
         "regime":
             regime,
@@ -547,58 +726,103 @@ def main():
         "currencies": {
 
             "usd": {
+
                 "label":
                     "US Dollar Credit",
 
                 "scope":
-                    "Borrowers outside the United States",
+                    "Non-bank borrowers outside "
+                    "the United States",
+
+                "currency":
+                    "USD",
 
                 **usd
             },
 
+
             "eur": {
+
                 "label":
                     "Euro Credit",
 
                 "scope":
-                    "Borrowers outside the euro area",
+                    "Non-bank borrowers outside "
+                    "the euro area",
+
+                "currency":
+                    "EUR",
 
                 **eur
             },
 
+
             "jpy": {
+
                 "label":
                     "Yen Credit",
 
                 "scope":
-                    "Borrowers outside Japan",
+                    "Non-bank borrowers outside "
+                    "Japan",
+
+                "currency":
+                    "JPY",
 
                 **jpy
             }
         }
     }
 
-    # Never replace valid data with broken output
-    if not output["currencies"]["usd"]["amount"]:
-        raise RuntimeError(
-            "USD data validation failed."
+
+    # -----------------------------------------------------
+    # VALIDATION
+    # -----------------------------------------------------
+
+    for key in (
+        "usd",
+        "eur",
+        "jpy"
+    ):
+
+        item = (
+            output["currencies"][key]
         )
+
+        if (
+            item["amount"]
+            is None
+            or item["amount"] <= 0
+        ):
+
+            raise RuntimeError(
+                f"Invalid {key.upper()} "
+                "liquidity value."
+            )
+
+
+    # -----------------------------------------------------
+    # WRITE ONLY AFTER EVERYTHING PASSED
+    # -----------------------------------------------------
 
     with open(
         "data.json",
         "w",
         encoding="utf-8"
-    ) as f:
+    ) as file:
 
         json.dump(
             output,
-            f,
-            indent=2,
-            ensure_ascii=False
+            file,
+            ensure_ascii=False,
+            indent=2
         )
 
+
     print(
-        "Global liquidity data updated."
+        "Global liquidity data "
+        "successfully written "
+        "to data.json."
     )
 
 
