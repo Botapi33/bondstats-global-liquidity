@@ -1,4 +1,41 @@
 {
-  "ok": false,
-  "message": "Waiting for first BIS data update."
+  "ok": true,
+  "title": "Global Liquidity Monitor",
+  "source": "Bank for International Settlements",
+  "dataset": "Global Liquidity Indicators",
+  "period": "2026-Q1",
+  "updatedAt": "2026-08-18T00:06:48.327284+00:00",
+  "regime": {
+    "name": "BROAD LIQUIDITY EXPANSION",
+    "description": "Foreign-currency credit is expanding across multiple major funding currencies, indicating broad growth in international credit availability."
+  },
+  "currencies": {
+    "usd": {
+      "label": "US Dollar Credit",
+      "scope": "Non-bank borrowers outside the United States",
+      "currency": "USD",
+      "amount": 14742816.992,
+      "period": "2026-Q1",
+      "growth": 7.304,
+      "growthPeriod": "2026-Q1"
+    },
+    "eur": {
+      "label": "Euro Credit",
+      "scope": "Non-bank borrowers outside the euro area",
+      "currency": "EUR",
+      "amount": 5118784.754,
+      "period": "2026-Q1",
+      "growth": 11.616,
+      "growthPeriod": "2026-Q1"
+    },
+    "jpy": {
+      "label": "Yen Credit",
+      "scope": "Non-bank borrowers outside Japan",
+      "currency": "JPY",
+      "amount": 65828015.048,
+      "period": "2026-Q1",
+      "growth": 0.202,
+      "growthPeriod": "2026-Q1"
+    }
+  }
 }
