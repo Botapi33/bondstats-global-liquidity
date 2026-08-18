@@ -8,49 +8,49 @@
 
 <style>
 
-:root {
-  --bg: #040606;
-  --bg2: #070a09;
-  --panel: #090d0c;
+:root{
+  --bg:#030606;
+  --bg2:#050908;
+  --surface:#08100d;
+  --surface2:#0a1310;
 
-  --text: #f2f6f4;
-  --muted: #8b9992;
-  --muted2: #5f6d66;
+  --text:#f1f6f3;
+  --muted:#91a098;
+  --muted2:#5f7067;
 
-  --line: rgba(118, 150, 137, 0.16);
-  --line2: rgba(118, 150, 137, 0.28);
+  --line:rgba(130,165,148,.15);
+  --line2:rgba(130,165,148,.27);
 
-  --green: #31dc8b;
-  --greenBright: #65f3ad;
-  --greenSoft: rgba(49,220,139,0.07);
+  --green:#37df91;
+  --green2:#78f5b6;
+  --green-soft:rgba(55,223,145,.08);
+  --green-glow:rgba(55,223,145,.18);
 
-  --orange: #efa15d;
-  --red: #e47474;
-  --blue: #76b9ff;
+  --warm:#e9ac69;
+  --red:#e97b72;
 }
 
-* {
-  box-sizing: border-box;
+*{
+  box-sizing:border-box;
 }
 
 html,
-body {
-  margin: 0;
-  padding: 0;
-  width: 100%;
+body{
+  margin:0;
+  padding:0;
+  width:100%;
+  max-width:100%;
+  overflow-x:hidden;
+
   background:
     radial-gradient(
-      circle at 12% 0%,
-      rgba(49,220,139,0.075),
-      transparent 25%
+      circle at 50% -20%,
+      rgba(55,223,145,.08),
+      transparent 32%
     ),
-    linear-gradient(
-      180deg,
-      #050807 0%,
-      #030505 100%
-    );
+    #030606;
 
-  color: var(--text);
+  color:var(--text);
 
   font-family:
     -apple-system,
@@ -61,826 +61,900 @@ body {
     sans-serif;
 }
 
-body {
-  padding: 18px;
+body{
+  padding:18px;
 }
 
-.shell {
-  width: 100%;
-  max-width: 1320px;
-  margin: 0 auto;
+.app{
+  width:100%;
+  max-width:1320px;
+  margin:0 auto;
+
+  border:1px solid var(--line);
+  border-radius:20px;
+
+  overflow:hidden;
 
   background:
     linear-gradient(
       180deg,
-      rgba(10,15,13,0.97),
-      rgba(5,8,7,0.99)
+      rgba(8,14,12,.98),
+      rgba(3,7,6,.99)
     );
 
-  border: 1px solid var(--line);
-  border-radius: 18px;
-
-  overflow: hidden;
-
   box-shadow:
-    0 26px 80px rgba(0,0,0,0.38),
-    0 0 40px rgba(49,220,139,0.035);
+    0 28px 90px rgba(0,0,0,.42);
 }
 
 
-/* ======================================================
-   TOP BAR
-====================================================== */
+/* =====================================================
+   HEADER
+===================================================== */
 
-.topbar {
-  min-height: 48px;
+.top{
+  min-height:50px;
 
-  display: flex;
-  align-items: center;
-  justify-content: space-between;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
 
-  gap: 20px;
+  gap:20px;
 
-  padding: 0 22px;
+  padding:0 24px;
 
-  border-bottom: 1px solid var(--line);
+  border-bottom:1px solid var(--line);
+}
+
+.identity{
+  display:flex;
+  align-items:center;
+  gap:11px;
+}
+
+.identity-dot{
+  width:7px;
+  height:7px;
+
+  flex:0 0 auto;
+
+  border-radius:100px;
+
+  background:var(--green);
+
+  box-shadow:
+    0 0 15px rgba(55,223,145,.8);
+}
+
+.identity-name{
+  color:var(--green2);
+
+  font-size:10px;
+  font-weight:700;
+
+  letter-spacing:.19em;
+  text-transform:uppercase;
+}
+
+.top-status{
+  display:flex;
+  gap:20px;
+
+  color:var(--muted2);
+
+  font-size:9px;
+
+  letter-spacing:.12em;
+  text-transform:uppercase;
+}
+
+
+/* =====================================================
+   INTRO
+===================================================== */
+
+.intro{
+  display:grid;
+
+  grid-template-columns:
+    minmax(0,1.25fr)
+    minmax(260px,.75fr);
+
+  gap:48px;
+
+  padding:38px 34px 36px;
+
+  border-bottom:1px solid var(--line);
+}
+
+.intro > *{
+  min-width:0;
+}
+
+.overline{
+  margin-bottom:13px;
+
+  color:var(--muted2);
+
+  font-size:9px;
+  font-weight:700;
+
+  letter-spacing:.17em;
+  text-transform:uppercase;
+}
+
+h1{
+  margin:0;
+
+  font-size:
+    clamp(37px,5vw,64px);
+
+  line-height:.98;
+
+  letter-spacing:-.048em;
+
+  font-weight:650;
+}
+
+.intro-copy{
+  margin-top:17px;
+
+  max-width:720px;
+
+  color:var(--muted);
+
+  font-size:14px;
+  line-height:1.72;
+}
+
+.release{
+  display:grid;
+  grid-template-columns:1fr 1fr;
+
+  gap:1px;
+
+  align-self:end;
+
+  background:var(--line);
+
+  border:1px solid var(--line);
+
+  border-radius:13px;
+
+  overflow:hidden;
+}
+
+.release-cell{
+  min-width:0;
+
+  padding:16px;
+
+  background:
+    rgba(8,14,12,.96);
+}
+
+.release-label{
+  color:var(--muted2);
+
+  font-size:8px;
+  font-weight:700;
+
+  letter-spacing:.13em;
+  text-transform:uppercase;
+}
+
+.release-value{
+  margin-top:7px;
+
+  font-size:17px;
+  font-weight:620;
+}
+
+.release-sub{
+  margin-top:5px;
+
+  color:var(--muted);
+
+  font-size:10px;
+  line-height:1.45;
+}
+
+
+/* =====================================================
+   OBSERVATORY
+===================================================== */
+
+.observatory{
+  display:grid;
+
+  grid-template-columns:
+    minmax(300px,.82fr)
+    minmax(0,1.18fr);
+
+  min-height:420px;
+
+  border-bottom:1px solid var(--line);
+}
+
+
+/* =====================================================
+   PULSE / HALO
+===================================================== */
+
+.pulse-side{
+  position:relative;
+
+  display:flex;
+  align-items:center;
+  justify-content:center;
+
+  min-width:0;
+
+  padding:40px 24px;
+
+  overflow:hidden;
+
+  border-right:1px solid var(--line);
+
+  background:
+    radial-gradient(
+      circle at center,
+      rgba(55,223,145,.07),
+      transparent 55%
+    );
+}
+
+.pulse-side::before{
+  content:"";
+
+  position:absolute;
+
+  width:430px;
+  height:430px;
+
+  border:1px solid rgba(55,223,145,.055);
+  border-radius:50%;
+}
+
+.pulse-side::after{
+  content:"";
+
+  position:absolute;
+
+  width:330px;
+  height:330px;
+
+  border:1px solid rgba(55,223,145,.08);
+  border-radius:50%;
+}
+
+.pulse{
+  position:relative;
+  z-index:2;
+
+  width:250px;
+  height:250px;
+
+  display:flex;
+  flex-direction:column;
+
+  align-items:center;
+  justify-content:center;
+
+  text-align:center;
+
+  border-radius:50%;
+
+  border:
+    1px solid
+    rgba(81,230,157,.35);
+
+  background:
+    radial-gradient(
+      circle at 50% 45%,
+      rgba(55,223,145,.10),
+      rgba(4,9,7,.90) 68%
+    );
+
+  box-shadow:
+    0 0 70px rgba(55,223,145,.08),
+    inset 0 0 40px rgba(55,223,145,.025);
+}
+
+.pulse::before{
+  content:"";
+
+  position:absolute;
+
+  inset:13px;
+
+  border-radius:50%;
+
+  border:
+    1px solid
+    rgba(55,223,145,.12);
+}
+
+.pulse-label{
+  position:relative;
+
+  color:var(--muted);
+
+  font-size:8px;
+  font-weight:700;
+
+  letter-spacing:.16em;
+
+  text-transform:uppercase;
+}
+
+.pulse-value{
+  position:relative;
+
+  margin-top:12px;
+
+  color:var(--green2);
+
+  font-size:37px;
+
+  line-height:1;
+
+  font-weight:650;
+
+  letter-spacing:-.045em;
+}
+
+.pulse-caption{
+  position:relative;
+
+  margin-top:10px;
+
+  max-width:150px;
+
+  color:var(--muted);
+
+  font-size:10px;
+  line-height:1.45;
+}
+
+
+/* =====================================================
+   REGIME + FLOWS
+===================================================== */
+
+.flow-side{
+  min-width:0;
+}
+
+.regime{
+  padding:29px 30px 27px;
+
+  border-bottom:1px solid var(--line);
 
   background:
     linear-gradient(
       90deg,
-      rgba(49,220,139,0.035),
-      rgba(255,255,255,0.005)
+      rgba(55,223,145,.055),
+      transparent 67%
     );
 }
 
-.brand {
-  display: flex;
-  align-items: center;
+.regime-label{
+  color:var(--muted);
 
-  gap: 11px;
+  font-size:9px;
+  font-weight:700;
 
-  min-width: 0;
+  letter-spacing:.16em;
+  text-transform:uppercase;
 }
 
-.live-dot {
-  width: 7px;
-  height: 7px;
+.regime-name{
+  margin-top:10px;
 
-  border-radius: 50%;
-
-  background: var(--green);
-
-  box-shadow:
-    0 0 13px rgba(49,220,139,0.75);
-}
-
-.brand-text {
-  color: var(--green);
-
-  font-size: 10px;
-  font-weight: 700;
-
-  letter-spacing: 0.18em;
-  text-transform: uppercase;
-}
-
-.top-meta {
-  display: flex;
-  gap: 18px;
-
-  color: var(--muted2);
-
-  font-size: 9px;
-
-  letter-spacing: 0.11em;
-  text-transform: uppercase;
-}
-
-
-/* ======================================================
-   HERO
-====================================================== */
-
-.hero {
-  display: grid;
-
-  grid-template-columns:
-    minmax(0,1.35fr)
-    minmax(260px,0.65fr);
-
-  gap: 50px;
-
-  padding:
-    36px
-    30px
-    33px;
-
-  border-bottom:
-    1px solid var(--line);
-}
-
-.hero-left,
-.hero-right {
-  min-width: 0;
-}
-
-.hero-title {
-  margin: 0;
-
-  max-width: 780px;
+  color:var(--green2);
 
   font-size:
-    clamp(35px,4.8vw,61px);
+    clamp(27px,3.6vw,46px);
 
-  line-height: 0.98;
+  line-height:1;
 
-  letter-spacing: -0.047em;
+  font-weight:650;
 
-  font-weight: 650;
+  letter-spacing:-.042em;
+
+  text-transform:uppercase;
 }
 
-.hero-subtitle {
-  margin-top: 16px;
+.regime-description{
+  margin-top:13px;
 
-  max-width: 760px;
+  max-width:740px;
 
-  color: var(--muted);
+  color:#b8c5be;
 
-  font-size: 14px;
-  line-height: 1.7;
-}
-
-.hero-right {
-  display: flex;
-  flex-direction: column;
-
-  justify-content: space-between;
-
-  gap: 22px;
-}
-
-.meta-label {
-  color: var(--muted2);
-
-  font-size: 9px;
-
-  letter-spacing: 0.15em;
-
-  text-transform: uppercase;
-
-  font-weight: 700;
-}
-
-.meta-value {
-  margin-top: 6px;
-
-  font-size: 17px;
-
-  font-weight: 620;
-}
-
-.meta-sub {
-  margin-top: 5px;
-
-  color: var(--muted);
-
-  font-size: 11px;
-  line-height: 1.5;
+  font-size:13px;
+  line-height:1.68;
 }
 
 
-/* ======================================================
-   LIQUIDITY REGIME
-====================================================== */
+/* =====================================================
+   FLOW ROWS
+===================================================== */
 
-.regime {
-  position: relative;
-
-  padding:
-    34px
-    30px
-    32px;
-
-  border-bottom:
-    1px solid var(--line);
-
-  background:
-    linear-gradient(
-      90deg,
-      rgba(49,220,139,0.06),
-      rgba(49,220,139,0.012) 42%,
-      transparent 75%
-    );
+.flows{
+  padding:10px 30px 24px;
 }
 
-.regime::before {
-  content: "";
-
-  position: absolute;
-
-  top: 0;
-  bottom: 0;
-  left: 0;
-
-  width: 3px;
-
-  background: var(--green);
-}
-
-.kicker {
-  margin-bottom: 12px;
-
-  color: var(--muted);
-
-  font-size: 9px;
-  font-weight: 700;
-
-  letter-spacing: 0.17em;
-
-  text-transform: uppercase;
-}
-
-.regime-name {
-  margin: 0;
-
-  color: var(--greenBright);
-
-  font-size:
-    clamp(34px,5vw,63px);
-
-  line-height: 0.96;
-
-  font-weight: 650;
-
-  letter-spacing: -0.05em;
-
-  text-transform: uppercase;
-}
-
-.regime-description {
-  margin-top: 17px;
-
-  max-width: 900px;
-
-  color: #bdc8c2;
-
-  font-size: 14px;
-
-  line-height: 1.75;
-}
-
-
-/* ======================================================
-   CURRENCY LIQUIDITY
-====================================================== */
-
-.currency-section {
-  border-bottom:
-    1px solid var(--line);
-}
-
-.section-head {
-  display: flex;
-
-  justify-content: space-between;
-  align-items: center;
-
-  gap: 20px;
-
-  padding:
-    18px
-    30px;
-
-  border-bottom:
-    1px solid var(--line);
-}
-
-.section-title {
-  color: var(--text);
-
-  font-size: 11px;
-  font-weight: 650;
-
-  letter-spacing: 0.13em;
-
-  text-transform: uppercase;
-}
-
-.section-note {
-  color: var(--muted2);
-
-  font-size: 9px;
-
-  letter-spacing: 0.1em;
-
-  text-transform: uppercase;
-}
-
-.currency-grid {
-  display: grid;
+.flow{
+  display:grid;
 
   grid-template-columns:
-    repeat(3,minmax(0,1fr));
+    110px
+    minmax(0,1fr)
+    115px;
+
+  align-items:center;
+
+  gap:22px;
+
+  padding:18px 0;
+
+  border-bottom:1px solid var(--line);
 }
 
-.currency {
-  position: relative;
-
-  min-width: 0;
-  min-height: 215px;
-
-  padding:
-    25px
-    24px
-    23px;
-
-  border-right:
-    1px solid var(--line);
-
-  background:
-    linear-gradient(
-      180deg,
-      rgba(255,255,255,0.013),
-      transparent
-    );
+.flow:last-child{
+  border-bottom:0;
 }
 
-.currency:last-child {
-  border-right: 0;
+.flow-code{
+  color:var(--muted2);
+
+  font-size:9px;
+
+  letter-spacing:.14em;
+  text-transform:uppercase;
 }
 
-.currency-number {
-  position: absolute;
+.flow-name{
+  margin-top:5px;
 
-  top: 20px;
-  right: 20px;
+  color:#dfe8e3;
 
-  color: var(--muted2);
+  font-size:12px;
+  font-weight:600;
+}
 
-  font-size: 9px;
+.flow-main{
+  min-width:0;
+}
+
+.flow-number{
+  display:flex;
+  align-items:baseline;
+
+  gap:10px;
+
+  min-width:0;
+}
+
+.flow-amount{
+  font-size:
+    clamp(24px,3vw,35px);
+
+  font-weight:650;
+
+  letter-spacing:-.035em;
 
   font-variant-numeric:
     tabular-nums;
 }
 
-.currency-label {
-  color: var(--muted);
+.flow-growth{
+  color:var(--green);
 
-  font-size: 9px;
-  font-weight: 700;
+  font-size:12px;
 
-  letter-spacing: 0.14em;
+  font-weight:650;
 
-  text-transform: uppercase;
+  white-space:nowrap;
 }
 
-.currency-value {
-  margin-top: 19px;
-
-  font-size:
-    clamp(30px,3.4vw,46px);
-
-  line-height: 1;
-
-  font-weight: 650;
-
-  letter-spacing: -0.04em;
-
-  font-variant-numeric:
-    tabular-nums;
+.flow-growth.down{
+  color:var(--warm);
 }
 
-.currency-growth {
-  margin-top: 12px;
+.flow-track{
+  position:relative;
 
-  font-size: 15px;
+  width:100%;
+  height:3px;
 
-  font-weight: 620;
+  margin-top:11px;
+
+  overflow:hidden;
+
+  border-radius:20px;
+
+  background:
+    rgba(255,255,255,.045);
 }
 
-.currency-scope {
-  margin-top: 13px;
+.flow-bar{
+  height:100%;
 
-  max-width: 270px;
+  border-radius:20px;
 
-  color: var(--muted);
+  background:
+    linear-gradient(
+      90deg,
+      rgba(55,223,145,.35),
+      var(--green)
+    );
 
-  font-size: 11px;
+  box-shadow:
+    0 0 12px
+    rgba(55,223,145,.25);
+}
 
-  line-height: 1.5;
+.flow-scope{
+  color:var(--muted);
+
+  font-size:10px;
+
+  line-height:1.45;
+
+  text-align:right;
 }
 
 
-/* ======================================================
-   MARKET STRUCTURE
-====================================================== */
+/* =====================================================
+   BOTTOM INTELLIGENCE STRIP
+===================================================== */
 
-.structure {
-  padding:
-    25px
-    30px
-    27px;
-
-  border-bottom:
-    1px solid var(--line);
-}
-
-.structure-grid {
-  display: grid;
+.intelligence{
+  display:grid;
 
   grid-template-columns:
     repeat(4,minmax(0,1fr));
 
-  margin-top: 14px;
-
-  border:
-    1px solid var(--line);
-
-  border-radius: 11px;
-
-  overflow: hidden;
+  border-bottom:1px solid var(--line);
 }
 
-.structure-cell {
-  padding:
-    16px
-    16px
-    15px;
+.intel{
+  min-width:0;
 
-  min-width: 0;
+  padding:21px 22px 20px;
 
-  border-right:
-    1px solid var(--line);
-
-  background:
-    rgba(255,255,255,0.009);
+  border-right:1px solid var(--line);
 }
 
-.structure-cell:last-child {
-  border-right: 0;
+.intel:last-child{
+  border-right:0;
 }
 
-.structure-label {
-  color: var(--muted2);
+.intel-label{
+  color:var(--muted2);
 
-  font-size: 8px;
+  font-size:8px;
 
-  letter-spacing: 0.09em;
+  letter-spacing:.12em;
+  text-transform:uppercase;
 
-  line-height: 1.4;
-
-  text-transform: uppercase;
-
-  font-weight: 700;
+  font-weight:700;
 }
 
-.structure-value {
-  margin-top: 9px;
+.intel-value{
+  margin-top:9px;
 
-  font-size: 18px;
+  font-size:19px;
 
-  font-weight: 620;
+  line-height:1.2;
 
-  line-height: 1.25;
+  font-weight:620;
 }
 
-.structure-sub {
-  margin-top: 5px;
+.intel-value.green{
+  color:var(--green2);
+}
 
-  color: var(--muted);
+.intel-sub{
+  margin-top:7px;
 
-  font-size: 10px;
+  color:var(--muted);
 
-  line-height: 1.45;
+  font-size:10px;
+
+  line-height:1.5;
 }
 
 
-/* ======================================================
-   BOTTOM
-====================================================== */
+/* =====================================================
+   EXPLANATION
+===================================================== */
 
-.lower {
-  display: grid;
+.explanation{
+  display:grid;
 
   grid-template-columns:
-    minmax(0,1.18fr)
-    minmax(0,0.82fr);
+    minmax(0,1.2fr)
+    minmax(280px,.8fr);
 }
 
-.interpretation {
-  padding:
-    29px
-    30px
-    31px;
+.reading{
+  min-width:0;
 
-  border-right:
-    1px solid var(--line);
+  padding:29px 30px 31px;
+
+  border-right:1px solid var(--line);
 }
 
-.methodology {
-  padding:
-    29px
-    30px
-    31px;
+.method{
+  min-width:0;
+
+  padding:29px 30px 31px;
 
   background:
-    rgba(255,255,255,0.007);
+    rgba(255,255,255,.006);
 }
 
-.lower-title {
-  margin: 0;
+.small-title{
+  color:var(--muted);
 
-  font-size: 23px;
+  font-size:9px;
+  font-weight:700;
 
-  font-weight: 630;
-
-  letter-spacing: -0.025em;
+  letter-spacing:.15em;
+  text-transform:uppercase;
 }
 
-.lower-text {
-  margin-top: 11px;
+.explanation h3{
+  margin:10px 0 0;
 
-  max-width: 760px;
+  font-size:23px;
 
-  color: #b6c1bb;
+  line-height:1.15;
 
-  font-size: 13px;
+  font-weight:630;
 
-  line-height: 1.78;
+  letter-spacing:-.025em;
 }
 
-.method-list {
-  margin-top: 15px;
+.reading-text{
+  margin-top:11px;
 
-  border-top:
-    1px solid var(--line);
+  max-width:760px;
+
+  color:#b4c0ba;
+
+  font-size:13px;
+
+  line-height:1.75;
 }
 
-.method-row {
-  display: grid;
+.method-list{
+  margin-top:15px;
 
-  grid-template-columns:
-    minmax(0,0.75fr)
-    minmax(0,1.25fr);
+  border-top:1px solid var(--line);
+}
 
-  gap: 15px;
+.method-row{
+  display:flex;
 
-  padding:
-    10px
-    0;
+  justify-content:space-between;
+
+  gap:18px;
+
+  padding:10px 0;
 
   border-bottom:
-    1px solid rgba(255,255,255,0.04);
+    1px solid
+    rgba(255,255,255,.04);
+
+  font-size:11px;
 }
 
-.method-left {
-  color: #dbe3df;
-
-  font-size: 11px;
+.method-row span:first-child{
+  color:#d9e3de;
 }
 
-.method-right {
-  color: var(--muted);
+.method-row span:last-child{
+  min-width:0;
 
-  font-size: 11px;
+  color:var(--muted);
 
-  text-align: right;
+  text-align:right;
+
+  overflow-wrap:anywhere;
 }
 
 
-/* ======================================================
+/* =====================================================
    FOOTER
-====================================================== */
+===================================================== */
 
-.footer {
-  display: flex;
+.footer{
+  display:flex;
 
-  justify-content: space-between;
+  justify-content:space-between;
 
-  gap: 20px;
+  gap:20px;
 
-  padding:
-    14px
-    30px
-    16px;
+  padding:14px 30px 16px;
 
-  border-top:
-    1px solid var(--line);
+  border-top:1px solid var(--line);
 
-  color: var(--muted2);
+  color:var(--muted2);
 
-  font-size: 9px;
+  font-size:9px;
 
-  line-height: 1.6;
+  line-height:1.6;
 
-  text-transform: uppercase;
+  letter-spacing:.07em;
 
-  letter-spacing: 0.07em;
+  text-transform:uppercase;
 }
 
-.footer strong {
-  color: #91a098;
-
-  font-weight: 600;
+.footer strong{
+  color:#94a39b;
 }
 
 
-/* ======================================================
-   COLORS
-====================================================== */
+/* =====================================================
+   STATES
+===================================================== */
 
-.positive {
-  color: var(--green);
+.loading{
+  min-height:560px;
+
+  display:flex;
+
+  align-items:center;
+  justify-content:center;
+
+  color:var(--muted);
+
+  font-size:10px;
+
+  letter-spacing:.15em;
+
+  text-transform:uppercase;
 }
 
-.negative {
-  color: var(--orange);
-}
+.error{
+  margin:70px auto;
 
-.neutral {
-  color: var(--text);
-}
+  max-width:720px;
 
-
-/* ======================================================
-   LOADING / ERROR
-====================================================== */
-
-.loading {
-  min-height: 520px;
-
-  display: flex;
-
-  align-items: center;
-  justify-content: center;
-
-  color: var(--muted);
-
-  font-size: 11px;
-
-  letter-spacing: 0.13em;
-
-  text-transform: uppercase;
-}
-
-.error {
-  margin:
-    70px
-    auto;
-
-  max-width: 760px;
-
-  padding: 24px;
-
-  color: #efb2a6;
+  padding:24px;
 
   border:
     1px solid
-    rgba(228,116,116,0.25);
+    rgba(233,123,114,.25);
+
+  border-radius:12px;
 
   background:
-    rgba(228,116,116,0.04);
+    rgba(233,123,114,.04);
 
-  border-radius: 12px;
+  color:#efb3ac;
 
-  font-size: 13px;
+  font-size:13px;
 
-  line-height: 1.7;
+  line-height:1.7;
 }
 
 
-/* ======================================================
+/* =====================================================
    RESPONSIVE
-====================================================== */
+===================================================== */
 
-@media (max-width: 950px) {
+@media(max-width:980px){
 
-  .hero {
-    grid-template-columns: 1fr;
+  .intro{
+    grid-template-columns:1fr;
   }
 
-  .hero-right {
-    display: grid;
+  .observatory{
+    grid-template-columns:1fr;
+  }
 
+  .pulse-side{
+    min-height:350px;
+
+    border-right:0;
+    border-bottom:1px solid var(--line);
+  }
+
+  .intelligence{
     grid-template-columns:
       repeat(2,minmax(0,1fr));
   }
 
-  .structure-grid {
-    grid-template-columns:
-      repeat(2,minmax(0,1fr));
+  .intel:nth-child(2){
+    border-right:0;
   }
 
-  .structure-cell:nth-child(2) {
-    border-right: 0;
+  .intel:nth-child(-n+2){
+    border-bottom:1px solid var(--line);
   }
 
-  .structure-cell:nth-child(-n+2) {
-    border-bottom:
-      1px solid var(--line);
+  .explanation{
+    grid-template-columns:1fr;
   }
 
-  .lower {
-    grid-template-columns: 1fr;
-  }
-
-  .interpretation {
-    border-right: 0;
-
-    border-bottom:
-      1px solid var(--line);
+  .reading{
+    border-right:0;
+    border-bottom:1px solid var(--line);
   }
 
 }
 
-@media (max-width: 700px) {
+@media(max-width:650px){
 
-  .currency-grid {
-    grid-template-columns: 1fr;
+  body{
+    padding:10px;
   }
 
-  .currency {
-    border-right: 0;
-
-    border-bottom:
-      1px solid var(--line);
+  .app{
+    border-radius:13px;
   }
 
-  .currency:last-child {
-    border-bottom: 0;
+  .top{
+    display:block;
+
+    padding:14px 16px;
   }
 
-}
+  .top-status{
+    margin-top:10px;
 
-@media (max-width: 560px) {
-
-  body {
-    padding: 10px;
+    flex-wrap:wrap;
   }
 
-  .shell {
-    border-radius: 12px;
-  }
-
-  .topbar,
-  .hero,
+  .intro,
   .regime,
-  .section-head,
-  .structure,
-  .interpretation,
-  .methodology,
-  .footer {
-    padding-left: 16px;
-    padding-right: 16px;
+  .flows,
+  .reading,
+  .method,
+  .footer{
+    padding-left:17px;
+    padding-right:17px;
   }
 
-  .topbar {
-    display: block;
-
-    padding-top: 13px;
-    padding-bottom: 13px;
+  .release{
+    grid-template-columns:1fr;
   }
 
-  .top-meta {
-    margin-top: 9px;
+  .flow{
+    grid-template-columns:1fr;
 
-    flex-wrap: wrap;
+    gap:8px;
   }
 
-  .hero-right {
-    grid-template-columns: 1fr;
+  .flow-scope{
+    text-align:left;
   }
 
-  .section-head {
-    display: block;
+  .intelligence{
+    grid-template-columns:1fr;
   }
 
-  .section-note {
-    margin-top: 7px;
+  .intel,
+  .intel:nth-child(2){
+    border-right:0;
+    border-bottom:1px solid var(--line);
   }
 
-  .structure-grid {
-    grid-template-columns: 1fr;
+  .intel:last-child{
+    border-bottom:0;
   }
 
-  .structure-cell,
-  .structure-cell:nth-child(2) {
-    border-right: 0;
-
-    border-bottom:
-      1px solid var(--line);
+  .footer{
+    display:block;
   }
 
-  .structure-cell:last-child {
-    border-bottom: 0;
-  }
-
-  .footer {
-    display: block;
-  }
-
-  .footer div + div {
-    margin-top: 7px;
+  .footer > div + div{
+    margin-top:8px;
   }
 
 }
@@ -888,16 +962,12 @@ body {
 </style>
 </head>
 
-
 <body>
 
-<div
-  id="app"
-  class="shell"
->
+<div id="app" class="app">
 
   <div class="loading">
-    Loading global liquidity…
+    Reading global liquidity…
   </div>
 
 </div>
@@ -905,130 +975,234 @@ body {
 
 <script>
 
-const API_URL =
-  "./data.json";
+const API_URL = "./data.json";
 
 
-/* ======================================================
-   HELPERS
-====================================================== */
+/* =====================================================
+   SAFE HELPERS
+===================================================== */
 
-function safeNumber(value) {
+function number(value){
 
-  const n =
-    Number(value);
+  const n = Number(value);
 
   return Number.isFinite(n)
     ? n
     : null;
+
 }
 
 
-function safeText(value) {
+function text(value){
 
-  if (
+  if(
     value === null ||
     value === undefined ||
     value === ""
-  ) {
+  ){
     return "—";
   }
 
   return String(value);
-}
-
-
-function formatAmount(
-  value,
-  symbol
-) {
-
-  const n =
-    safeNumber(value);
-
-  if (n === null) {
-    return "—";
-  }
-
-  /*
-    BIS GLI amount outstanding
-    observations are represented
-    in billions of currency units.
-
-    Convert billions → trillions.
-  */
-
-  const trillions =
-    n / 1000;
-
-  if (trillions >= 1) {
-
-    return (
-      symbol +
-      trillions.toFixed(2) +
-      "T"
-    );
-
-  }
-
-  return (
-    symbol +
-    n.toFixed(0) +
-    "B"
-  );
 
 }
 
 
-function formatGrowth(value) {
+/*
+  BIS publication tables display amount
+  outstanding in billions of the respective
+  currency.
 
-  const n =
-    safeNumber(value);
+  The current API-derived JSON may contain
+  either:
+  - values already expressed in billions
+  - underlying values expressed in millions
 
-  if (n === null) {
+  This handles both safely.
+*/
+
+function trillions(value){
+
+  const n = number(value);
+
+  if(n === null){
+    return null;
+  }
+
+  const abs = Math.abs(n);
+
+  if(abs >= 1000000){
+
+    /* millions -> trillions */
+    return n / 1000000;
+
+  }
+
+  /* billions -> trillions */
+  return n / 1000;
+
+}
+
+
+function amount(value,symbol){
+
+  const t = trillions(value);
+
+  if(t === null){
     return "—";
   }
 
-  const prefix =
-    n > 0
-      ? "+"
-      : "";
+  return symbol + t.toFixed(2) + "T";
+
+}
+
+
+function growth(value){
+
+  const n = number(value);
+
+  if(n === null){
+    return "—";
+  }
 
   return (
-    prefix +
+    (n > 0 ? "+" : "") +
     n.toFixed(1) +
-    "% YoY"
+    "%"
   );
 
 }
 
 
-function growthClass(value) {
+function growthClass(value){
 
-  const n =
-    safeNumber(value);
+  const n = number(value);
 
-  if (n === null) {
-    return "neutral";
+  if(
+    n !== null &&
+    n < 0
+  ){
+    return "down";
   }
 
-  if (n > 0) {
-    return "positive";
-  }
+  return "";
 
-  if (n < 0) {
-    return "negative";
-  }
-
-  return "neutral";
 }
 
 
-/* ======================================================
-   RENDER
-====================================================== */
+function formatTimestamp(value){
 
-function render(data) {
+  if(!value){
+    return "—";
+  }
+
+  const d =
+    new Date(value);
+
+  if(
+    Number.isNaN(
+      d.getTime()
+    )
+  ){
+    return "—";
+  }
+
+  return d.toLocaleDateString(
+    "en-US",
+    {
+      year:"numeric",
+      month:"short",
+      day:"numeric"
+    }
+  );
+
+}
+
+
+/* =====================================================
+   CALCULATIONS
+===================================================== */
+
+function averageGrowth(items){
+
+  const values =
+    items
+      .map(item => number(item.growth))
+      .filter(value => value !== null);
+
+  if(!values.length){
+    return null;
+  }
+
+  return (
+    values.reduce(
+      (a,b) => a+b,
+      0
+    )
+    /
+    values.length
+  );
+
+}
+
+
+function strongestCurrency(items){
+
+  const valid =
+    items
+      .filter(
+        item =>
+          number(item.growth) !== null
+      )
+      .sort(
+        (a,b) =>
+          number(b.growth)
+          -
+          number(a.growth)
+      );
+
+  if(!valid.length){
+    return null;
+  }
+
+  return valid[0];
+}
+
+
+function flowWidth(value,maxValue){
+
+  const n = number(value);
+  const m = number(maxValue);
+
+  if(
+    n === null ||
+    m === null ||
+    m <= 0
+  ){
+    return 8;
+  }
+
+  const width =
+    Math.abs(n) /
+    m *
+    100;
+
+  return Math.max(
+    8,
+    Math.min(
+      width,
+      100
+    )
+  );
+
+}
+
+
+/* =====================================================
+   RENDER
+===================================================== */
+
+function render(data){
 
   const currencies =
     data.currencies || {};
@@ -1045,32 +1219,47 @@ function render(data) {
   const regime =
     data.regime || {};
 
+  const items = [
+    {
+      ...usd,
+      code:"USD",
+      symbol:"$",
+      name:"US Dollar Credit"
+    },
+    {
+      ...eur,
+      code:"EUR",
+      symbol:"€",
+      name:"Euro Credit"
+    },
+    {
+      ...jpy,
+      code:"JPY",
+      symbol:"¥",
+      name:"Yen Credit"
+    }
+  ];
 
-  const growthValues = [
-    usd.growth,
-    eur.growth,
-    jpy.growth
-  ]
-  .map(safeNumber)
-  .filter(
-    value =>
-      value !== null
-  );
+  const avg =
+    averageGrowth(items);
 
+  const leader =
+    strongestCurrency(items);
 
-  let averageGrowth = null;
+  const growthNumbers =
+    items
+      .map(
+        item =>
+          Math.abs(
+            number(item.growth) || 0
+          )
+      );
 
-  if (growthValues.length) {
-
-    averageGrowth =
-      growthValues.reduce(
-        (a,b) => a + b,
-        0
-      )
-      /
-      growthValues.length;
-
-  }
+  const maxGrowth =
+    Math.max(
+      ...growthNumbers,
+      1
+    );
 
 
   document
@@ -1078,28 +1267,132 @@ function render(data) {
     .innerHTML = `
 
 
-      <div class="topbar">
+    <header class="top">
 
-        <div class="brand">
+      <div class="identity">
 
-          <div class="live-dot"></div>
+        <div class="identity-dot"></div>
 
-          <div class="brand-text">
-            BondStats Global Funding Intelligence
+        <div class="identity-name">
+          BondStats Liquidity Observatory
+        </div>
+
+      </div>
+
+
+      <div class="top-status">
+
+        <span>
+          BIS Global Liquidity Indicators
+        </span>
+
+        <span>
+          Automated Data Layer
+        </span>
+
+      </div>
+
+    </header>
+
+
+
+    <section class="intro">
+
+      <div>
+
+        <div class="overline">
+          Global Funding System
+        </div>
+
+        <h1>
+          Global Liquidity Monitor
+        </h1>
+
+        <div class="intro-copy">
+          Follow the foreign-currency credit
+          moving through the international
+          financial system — across dollars,
+          euros and yen.
+        </div>
+
+      </div>
+
+
+      <div class="release">
+
+
+        <div class="release-cell">
+
+          <div class="release-label">
+            Latest BIS Period
+          </div>
+
+          <div class="release-value">
+            ${text(data.period)}
+          </div>
+
+          <div class="release-sub">
+            Global Liquidity Indicators
           </div>
 
         </div>
 
 
-        <div class="top-meta">
+        <div class="release-cell">
 
-          <span>
-            BIS Global Liquidity
-          </span>
+          <div class="release-label">
+            Data Refresh
+          </div>
 
-          <span>
-            Quarterly Framework
-          </span>
+          <div class="release-value">
+            ${formatTimestamp(data.updatedAt)}
+          </div>
+
+          <div class="release-sub">
+            Updates automatically
+            when new data is processed.
+          </div>
+
+        </div>
+
+
+      </div>
+
+    </section>
+
+
+
+    <section class="observatory">
+
+
+      <div class="pulse-side">
+
+        <div class="pulse">
+
+          <div class="pulse-label">
+            Global Liquidity Pulse
+          </div>
+
+          <div class="pulse-value">
+            ${
+              avg === null
+                ? "—"
+                :
+                (
+                  (avg > 0 ? "+" : "")
+                  +
+                  avg.toFixed(1)
+                  +
+                  "%"
+                )
+            }
+          </div>
+
+          <div class="pulse-caption">
+            Average annual growth
+            across the three major
+            funding currencies
+          </div>
 
         </div>
 
@@ -1107,477 +1400,301 @@ function render(data) {
 
 
 
-      <section class="hero">
+      <div class="flow-side">
 
-        <div class="hero-left">
 
-          <h1 class="hero-title">
-            Global Liquidity Monitor
-          </h1>
+        <div class="regime">
 
-          <div class="hero-subtitle">
-            Track foreign-currency credit,
-            international funding conditions
-            and the liquidity forces moving
-            through the global financial system.
+          <div class="regime-label">
+            Current Liquidity Regime
+          </div>
+
+          <div class="regime-name">
+            ${text(regime.name)}
+          </div>
+
+          <div class="regime-description">
+            ${text(regime.description)}
           </div>
 
         </div>
 
 
-        <div class="hero-right">
+        <div class="flows">
 
 
-          <div>
+          ${items.map(item => `
 
-            <div class="meta-label">
-              Latest BIS Period
-            </div>
+            <div class="flow">
 
-            <div class="meta-value">
-              ${safeText(data.period)}
-            </div>
+              <div>
 
-            <div class="meta-sub">
-              Global Liquidity Indicators
-            </div>
+                <div class="flow-code">
+                  ${item.code}
+                </div>
 
-          </div>
+                <div class="flow-name">
+                  ${item.name}
+                </div>
 
+              </div>
 
-          <div>
 
-            <div class="meta-label">
-              Coverage
-            </div>
+              <div class="flow-main">
 
-            <div class="meta-value">
-              USD · EUR · JPY
-            </div>
+                <div class="flow-number">
 
-            <div class="meta-sub">
-              Foreign-currency credit
-              outside major currency areas.
-            </div>
-
-          </div>
-
-
-        </div>
-
-      </section>
-
-
-
-      <section class="regime">
-
-        <div class="kicker">
-          Current Global Liquidity Regime
-        </div>
-
-        <h2 class="regime-name">
-          ${safeText(regime.name)}
-        </h2>
-
-        <div class="regime-description">
-          ${safeText(regime.description)}
-        </div>
-
-      </section>
-
-
-
-      <section class="currency-section">
-
-
-        <div class="section-head">
-
-          <div class="section-title">
-            Global Funding Currencies
-          </div>
-
-          <div class="section-note">
-            Amount Outstanding · Annual Growth
-          </div>
-
-        </div>
-
-
-        <div class="currency-grid">
-
-
-          <div class="currency">
-
-            <div class="currency-number">
-              01
-            </div>
-
-            <div class="currency-label">
-              US Dollar Credit
-            </div>
-
-            <div class="currency-value">
-              ${
-                formatAmount(
-                  usd.amount,
-                  "$"
-                )
-              }
-            </div>
-
-            <div class="
-              currency-growth
-              ${growthClass(
-                usd.growth
-              )}
-            ">
-              ${
-                formatGrowth(
-                  usd.growth
-                )
-              }
-            </div>
-
-            <div class="currency-scope">
-              ${
-                safeText(
-                  usd.scope
-                )
-              }
-            </div>
-
-          </div>
-
-
-
-          <div class="currency">
-
-            <div class="currency-number">
-              02
-            </div>
-
-            <div class="currency-label">
-              Euro Credit
-            </div>
-
-            <div class="currency-value">
-              ${
-                formatAmount(
-                  eur.amount,
-                  "€"
-                )
-              }
-            </div>
-
-            <div class="
-              currency-growth
-              ${growthClass(
-                eur.growth
-              )}
-            ">
-              ${
-                formatGrowth(
-                  eur.growth
-                )
-              }
-            </div>
-
-            <div class="currency-scope">
-              ${
-                safeText(
-                  eur.scope
-                )
-              }
-            </div>
-
-          </div>
-
-
-
-          <div class="currency">
-
-            <div class="currency-number">
-              03
-            </div>
-
-            <div class="currency-label">
-              Yen Credit
-            </div>
-
-            <div class="currency-value">
-              ${
-                formatAmount(
-                  jpy.amount,
-                  "¥"
-                )
-              }
-            </div>
-
-            <div class="
-              currency-growth
-              ${growthClass(
-                jpy.growth
-              )}
-            ">
-              ${
-                formatGrowth(
-                  jpy.growth
-                )
-              }
-            </div>
-
-            <div class="currency-scope">
-              ${
-                safeText(
-                  jpy.scope
-                )
-              }
-            </div>
-
-          </div>
-
-
-        </div>
-
-      </section>
-
-
-
-      <section class="structure">
-
-        <div class="kicker">
-          Liquidity Structure
-        </div>
-
-
-        <div class="structure-grid">
-
-
-          <div class="structure-cell">
-
-            <div class="structure-label">
-              Dominant Funding Currency
-            </div>
-
-            <div class="structure-value">
-              US Dollar
-            </div>
-
-            <div class="structure-sub">
-              Largest global
-              foreign-currency credit market.
-            </div>
-
-          </div>
-
-
-          <div class="structure-cell">
-
-            <div class="structure-label">
-              Average Growth Signal
-            </div>
-
-            <div class="
-              structure-value
-              ${growthClass(
-                averageGrowth
-              )}
-            ">
-              ${
-                averageGrowth === null
-                  ? "—"
-                  : (
-                      (
-                        averageGrowth > 0
-                          ? "+"
-                          : ""
+                  <div class="flow-amount">
+                    ${
+                      amount(
+                        item.amount,
+                        item.symbol
                       )
-                      +
-                      averageGrowth
-                        .toFixed(1)
-                      +
-                      "%"
-                    )
-              }
+                    }
+                  </div>
+
+                  <div class="
+                    flow-growth
+                    ${growthClass(
+                      item.growth
+                    )}
+                  ">
+                    ${
+                      growth(
+                        item.growth
+                      )
+                    }
+                    YoY
+                  </div>
+
+                </div>
+
+
+                <div class="flow-track">
+
+                  <div
+                    class="flow-bar"
+                    style="
+                      width:
+                      ${
+                        flowWidth(
+                          item.growth,
+                          maxGrowth
+                        )
+                      }%
+                    "
+                  ></div>
+
+                </div>
+
+              </div>
+
+
+              <div class="flow-scope">
+                ${text(item.scope)}
+              </div>
+
             </div>
 
-            <div class="structure-sub">
-              Average annual growth
-              across available currencies.
-            </div>
-
-          </div>
-
-
-          <div class="structure-cell">
-
-            <div class="structure-label">
-              Data Frequency
-            </div>
-
-            <div class="structure-value">
-              Quarterly
-            </div>
-
-            <div class="structure-sub">
-              BIS Global Liquidity
-              Indicator framework.
-            </div>
-
-          </div>
-
-
-          <div class="structure-cell">
-
-            <div class="structure-label">
-              Market Scope
-            </div>
-
-            <div class="structure-value">
-              International
-            </div>
-
-            <div class="structure-sub">
-              Credit outside the
-              issuing currency area.
-            </div>
-
-          </div>
+          `).join("")}
 
 
         </div>
 
-      </section>
+      </div>
+
+
+    </section>
 
 
 
-      <section class="lower">
+    <section class="intelligence">
 
 
-        <div class="interpretation">
+      <div class="intel">
 
-          <div class="kicker">
-            Liquidity Interpretation
+        <div class="intel-label">
+          Liquidity Regime
+        </div>
+
+        <div class="intel-value green">
+          ${text(regime.name)}
+        </div>
+
+        <div class="intel-sub">
+          Rules-based classification
+          from annual funding growth.
+        </div>
+
+      </div>
+
+
+
+      <div class="intel">
+
+        <div class="intel-label">
+          Strongest Growth
+        </div>
+
+        <div class="intel-value">
+          ${
+            leader
+              ? leader.code
+              : "—"
+          }
+        </div>
+
+        <div class="intel-sub">
+          ${
+            leader
+              ?
+                growth(
+                  leader.growth
+                )
+                +
+                " annual credit growth."
+              :
+                "No valid observation."
+          }
+        </div>
+
+      </div>
+
+
+
+      <div class="intel">
+
+        <div class="intel-label">
+          Funding Universe
+        </div>
+
+        <div class="intel-value">
+          USD · EUR · JPY
+        </div>
+
+        <div class="intel-sub">
+          Major international
+          funding currencies tracked.
+        </div>
+
+      </div>
+
+
+
+      <div class="intel">
+
+        <div class="intel-label">
+          Frequency
+        </div>
+
+        <div class="intel-value">
+          Quarterly
+        </div>
+
+        <div class="intel-sub">
+          BIS Global Liquidity
+          Indicator framework.
+        </div>
+
+      </div>
+
+
+    </section>
+
+
+
+    <section class="explanation">
+
+
+      <div class="reading">
+
+        <div class="small-title">
+          Reading the System
+        </div>
+
+        <h3>
+          ${text(regime.name)}
+        </h3>
+
+        <div class="reading-text">
+          ${text(regime.description)}
+          The monitor focuses on
+          foreign-currency credit to
+          non-bank borrowers outside the
+          respective issuing currency areas,
+          combining bank lending and
+          debt-market financing.
+        </div>
+
+      </div>
+
+
+
+      <div class="method">
+
+        <div class="small-title">
+          Data Architecture
+        </div>
+
+        <h3>
+          Transparent Inputs
+        </h3>
+
+
+        <div class="method-list">
+
+          <div class="method-row">
+            <span>Dollar</span>
+            <span>USD credit outside US</span>
           </div>
 
-          <h3 class="lower-title">
-            ${safeText(regime.name)}
-          </h3>
+          <div class="method-row">
+            <span>Euro</span>
+            <span>EUR credit outside euro area</span>
+          </div>
 
-          <div class="lower-text">
-            ${safeText(regime.description)}
+          <div class="method-row">
+            <span>Yen</span>
+            <span>JPY credit outside Japan</span>
+          </div>
+
+          <div class="method-row">
+            <span>Direction</span>
+            <span>Annual credit growth</span>
+          </div>
+
+          <div class="method-row">
+            <span>Source</span>
+            <span>BIS Global Liquidity Indicators</span>
           </div>
 
         </div>
 
+      </div>
 
 
-        <div class="methodology">
-
-          <div class="kicker">
-            Methodology
-          </div>
-
-          <h3 class="lower-title">
-            Transparent Inputs
-          </h3>
-
-
-          <div class="method-list">
-
-
-            <div class="method-row">
-
-              <div class="method-left">
-                Dollar
-              </div>
-
-              <div class="method-right">
-                USD credit outside US
-              </div>
-
-            </div>
-
-
-            <div class="method-row">
-
-              <div class="method-left">
-                Euro
-              </div>
-
-              <div class="method-right">
-                EUR credit outside euro area
-              </div>
-
-            </div>
-
-
-            <div class="method-row">
-
-              <div class="method-left">
-                Yen
-              </div>
-
-              <div class="method-right">
-                JPY credit outside Japan
-              </div>
-
-            </div>
-
-
-            <div class="method-row">
-
-              <div class="method-left">
-                Direction
-              </div>
-
-              <div class="method-right">
-                Annual credit growth
-              </div>
-
-            </div>
-
-
-            <div class="method-row">
-
-              <div class="method-left">
-                Source
-              </div>
-
-              <div class="method-right">
-                BIS Global Liquidity Indicators
-              </div>
-
-            </div>
-
-
-          </div>
-
-        </div>
-
-
-      </section>
+    </section>
 
 
 
-      <footer class="footer">
+    <footer class="footer">
 
-        <div>
-          Source:
-          <strong>
-            Bank for International Settlements
-          </strong>
-          · Global Liquidity Indicators
-        </div>
+      <div>
+        Source:
+        <strong>
+          Bank for International Settlements
+        </strong>
+        · Global Liquidity Indicators
+      </div>
 
-        <div>
-          <strong>
-            BondStats
-          </strong>
-          · Global Funding Intelligence
-        </div>
+      <div>
+        <strong>
+          BondStats
+        </strong>
+        · Global Funding Intelligence
+      </div>
 
-      </footer>
+    </footer>
 
 
   `;
@@ -1585,13 +1702,13 @@ function render(data) {
 }
 
 
-/* ======================================================
-   LOAD DATA
-====================================================== */
+/* =====================================================
+   DATA LOAD
+===================================================== */
 
-async function loadData() {
+async function load(){
 
-  try {
+  try{
 
     const response =
       await fetch(
@@ -1599,46 +1716,52 @@ async function loadData() {
         "?v=" +
         Date.now(),
         {
-          cache:
-            "no-store"
+          cache:"no-store"
         }
       );
 
-
-    if (!response.ok) {
+    if(!response.ok){
 
       throw new Error(
-        "BIS market data request failed."
+        "Liquidity data request failed."
       );
 
     }
-
 
     const data =
       await response.json();
 
-
-    if (
+    if(
       !data ||
-      !data.ok
-    ) {
+      data.ok !== true
+    ){
 
       throw new Error(
         data?.error ||
         data?.message ||
-        "Global liquidity data unavailable."
+        "Liquidity data unavailable."
       );
 
     }
 
+    if(
+      !data.currencies ||
+      !data.currencies.usd ||
+      !data.currencies.eur ||
+      !data.currencies.jpy
+    ){
+
+      throw new Error(
+        "Required BIS currency data is incomplete."
+      );
+
+    }
 
     render(data);
 
-
   }
 
-  catch(error) {
-
+  catch(error){
 
     document
       .getElementById("app")
@@ -1670,8 +1793,7 @@ async function loadData() {
 
 }
 
-
-loadData();
+load();
 
 </script>
 
