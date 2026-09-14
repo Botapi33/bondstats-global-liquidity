@@ -4,7 +4,7 @@
   "source": "Bank for International Settlements",
   "dataset": "Global Liquidity Indicators",
   "period": "2026-Q1",
-  "updatedAt": "2026-09-07T13:38:54.144947+00:00",
+  "updatedAt": "2026-09-14T14:22:17.857821+00:00",
   "regime": {
     "name": "BROAD LIQUIDITY EXPANSION",
     "description": "Foreign-currency credit is expanding across multiple major funding currencies, indicating broad growth in international credit availability."
@@ -14,27 +14,27 @@
       "label": "US Dollar Credit",
       "scope": "Non-bank borrowers outside the United States",
       "currency": "USD",
-      "amount": 14742816.992,
+      "amount": 14747653.746,
       "period": "2026-Q1",
-      "growth": 7.304,
+      "growth": 7.298,
       "growthPeriod": "2026-Q1"
     },
     "eur": {
       "label": "Euro Credit",
       "scope": "Non-bank borrowers outside the euro area",
       "currency": "EUR",
-      "amount": 5118784.754,
+      "amount": 5119197.746,
       "period": "2026-Q1",
-      "growth": 11.616,
+      "growth": 11.622,
       "growthPeriod": "2026-Q1"
     },
     "jpy": {
       "label": "Yen Credit",
       "scope": "Non-bank borrowers outside Japan",
       "currency": "JPY",
-      "amount": 65828015.048,
+      "amount": 65907982.646,
       "period": "2026-Q1",
-      "growth": 0.202,
+      "growth": 0.324,
       "growthPeriod": "2026-Q1"
     }
   }
